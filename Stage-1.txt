@@ -33,26 +33,25 @@ STAGE 1  ·  PEPTIDE BUILD, MD SIMULATION AND ANALYSIS
      gmx solvate -cp TAT_box.gro -cs spc216.gro -o TAT_solv.gro -p topol.top
 
 
-  ◆ Add ions 
-     
+  ◆ Add ions     
 	 gmx grompp -f ions.mdp -c TAT_solv.gro -p topol.top -o ions.tpr 
 	 gmx genion -s ions.tpr -o TAT_solv_ions.gro -p topol.top -pname NA -nname CL -neutral -conc 0.15
        → select group: SOL
 
-  ◆ Energy minimization
 
+  ◆ Energy minimization
      gmx grompp -f minim.mdp -c TAT_solv_ions.gro -p topol.top -o em.tpr
      gmx mdrun -v -deffnm em
      gmx energy -f em.edr -o potential.xvg
 
-  ◆ NVT equilibration
 
+  ◆ NVT equilibration
      gmx grompp -f nvt.mdp -c em.gro -r em.gro -p topol.top -o nvt.tpr
      gmx mdrun -deffnm nvt -v
      gmx energy -f nvt.edr -o temperature.xvg
 
-  ◆ NPT equilibration
 
+  ◆ NPT equilibration
      gmx grompp -f npt.mdp -c nvt.gro -r nvt.gro -t nvt.cpt -p topol.top -o npt.tpr
      gmx mdrun -deffnm npt -v
      gmx energy -f npt.edr -o pressure.xvg
@@ -60,7 +59,6 @@ STAGE 1  ·  PEPTIDE BUILD, MD SIMULATION AND ANALYSIS
 
 
   ◆ Production MD
-
      gmx grompp -f md.mdp -c npt.gro -t npt.cpt -p topol.top -o MDrun1.tpr
      gmx mdrun -deffnm MDrun1 -v
 
