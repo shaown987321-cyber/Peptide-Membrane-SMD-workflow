@@ -1,0 +1,42 @@
+define                  = -DPOSRES  
+integrator              = md        
+nsteps                  = 1000000   
+dt                      = 0.002     
+nstxout                 = 5000       
+nstvout                 = 5000      
+nstenergy               = 5000      
+nstlog                  = 5000      
+
+continuation            = yes       
+constraint_algorithm    = lincs    
+constraints             = h-bonds   
+lincs_iter              = 1         
+lincs_order             = 4         
+
+cutoff-scheme           = Verlet   
+ns_type                 = grid     
+nstlist                 = 10       
+
+rvdw                    = 1.2       
+rvdw-switch             = 1.0
+vdw-modifier            = force-switch
+DispCorr                = No
+
+rcoulomb                = 1.2       
+coulombtype             = PME       
+pme_order               = 4         
+fourierspacing          = 0.16     
+
+tcoupl                  = V-rescale 
+tc-grps                 = System 
+tau_t                   = 1.0
+ref_t                   = 310.15 
+
+pcoupl                  = C-rescale 
+pcoupltype              = isotropic             
+tau_p                   = 5.0                  
+ref_p                   = 1.0                  
+compressibility         = 4.5e-5              
+refcoord_scaling        = com
+pbc                     = xyz     
+gen_vel                 = no      
