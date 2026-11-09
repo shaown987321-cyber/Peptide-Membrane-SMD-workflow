@@ -1,0 +1,208 @@
+TAT PEPTIDE-MEMBRANE SYSTEM  ·  BUILD, MD RUN AND ANALYSIS
+Stage 2  ·  CHARMM-GUI Bilayer Builder  +  GROMACS
+════════════════════════════════════════════════════════════════════
+
+
+OVERVIEW
+────────────────────────────────────────────────────────────────────
+  2.1   System build (CHARMM-GUI Bilayer Builder)
+  2.2   GROMACS run (minimization, equilibration, production)
+  2.3   Trajectory centering
+  2.4   Analysis
+
+
+
+════════════════════════════════════════════════════════════════════
+2.1  SYSTEM BUILD  ·  CHARMM-GUI BILAYER BUILDER
+════════════════════════════════════════════════════════════════════
+
+  ◆ Terminal group patching (PROA)
+        First     GLYP
+        Last      CTER
+		
+  ◆ Peptide position
+        Translate molecule along Z axis:   55 Å
+
+  ◆ System size
+        Length of Z based on:   Water thickness = 35
+
+  ◆ Ions
+        Ion placing method:      Monte Carlo
+        Basic ion type:          KCl
+        Neutralizing LPS lipid A and core:   both Na
+
+  ◆ Temperature
+        310.15 K
+
+MEMBL (all membrane componets + protein)
+
+════════════════════════════════════════════════════════════════════
+2.2  GROMACS RUN
+════════════════════════════════════════════════════════════════════
+  ◆ Create new index file
+     gmx make_ndx -f step5_input.gro -n index.ndx -o index_complex.ndx
+	       → New group1: MEMB (all membrane component)
+		   → New group2: SOL (water + ions)
+		   → New group3: MEMBL (all membrane componets + protein)
+		   → New group4: Outer_leaflet
+		   → new group5: Inner_leaflet
+		   → New group6: LPS_core (AHEP, AGLC, AGAL, AKDO)
+	 
+	 
+  ◆ Step-6.0: Energy minimization
+    gmx grompp -f step6.0_minimization.mdp -c step5_input.gro -r step5_input.gro -p topol.top -o step6_0.tpr
+    gmx mdrun -deffnm step6_0 -v
+
+  ◆ Step-6.1: Equilibration (NVT)
+    gmx grompp -f step6.1_equilibration.mdp -c step6_0.gro -r step6_0.gro -p topol.top -n index_complex.ndx -o step6_1.tpr
+    gmx mdrun -deffnm step6_1 -v
+
+  ◆ Step-6.2: Equilibration (NVT)
+    gmx grompp -f step6.2_equilibration.mdp -c step6_1.gro -r step6_1.gro -t step6_1.cpt -p topol.top -n index_complex.ndx -o step6_2.tpr
+    gmx mdrun -deffnm step6_2 -v
+
+  ◆ Step-6.3: Equilibration (NVT)
+    gmx grompp -f step6.3_equilibration.mdp -c step6_2.gro -r step6_2.gro -t step6_2.cpt -p topol.top -n index_complex.ndx -o step6_3.tpr
+    gmx mdrun -deffnm step6_3 -v
+
+  ◆ Step 6.4  ·  Equilibration (NPT)
+    gmx grompp -f step6.4_equilibration.mdp -c step6_3.gro -r step6_3.gro -t step6_3.cpt -p topol.top -n index_complex.ndx -o step6_4.tpr
+    gmx mdrun -deffnm step6_4 -v
+
+  ◆ Step 6.5  ·  Equilibration (NPT)
+    gmx grompp -f step6.5_equilibration.mdp -c step6_4.gro -r step6_4.gro -t step6_4.cpt -p topol.top -n index_complex.ndx -o step6_5.tpr
+    gmx mdrun -deffnm step6_5 -v
+
+  ◆ Step 6.6  ·  Equilibration (NPT)
+    gmx grompp -f step6.6_equilibration.mdp -c step6_5.gro -r step6_5.gro -t step6_5.cpt -p topol.top -n index_complex.ndx -o step6_6.tpr
+    gmx mdrun -deffnm step6_6 -v
+
+  ◆ Step 7  ·  Production run
+    gmx grompp -f step7_production.mdp -c step6_6.gro -r step6_6.gro -t step6_6.cpt -p topol.top -n index_complex.ndx -o MDrun1.tpr
+    gmx mdrun -deffnm MDrun1 -v
+
+  ◆ Rerun (resume from checkpoint)
+    gmx mdrun -deffnm MDrun1 -cpi MDrun1.cpt -append -v
+
+
+
+════════════════════════════════════════════════════════════════════
+2.3  TRAJECTORY CENTERING
+════════════════════════════════════════════════════════════════════
+
+  ◆ Quick centering
+    gmx trjconv -s MDrun1.tpr -f MDrun1.xtc -o MDrun1_centered.xtc -pbc mol -center -ur compact
+         center group: Protein
+        → output group: System
+
+  ◆ Step-by-step centering (more robust)
+     #Step-a: Make molecules whole
+      gmx trjconv -s MDrun1.tpr -f MDrun1.xtc -o MDrun1_whole.xtc -pbc whole
+        → output group: System
+
+     #Step-b: Remove jumps across the box
+      gmx trjconv -s MDrun1.tpr -f MDrun1_whole.xtc -o MDrun1_nojump.xtc -pbc nojump
+        → output group: System
+
+     #Step-c: Center on the peptide
+      gmx trjconv -s MDrun1.tpr -f MDrun1_nojump.xtc -o MDrun1_whole_pbc.xtc -pbc mol -center -ur compact
+        → center group: Protein
+        → output group: System
+
+
+
+════════════════════════════════════════════════════════════════════
+2.4  ANALYSIS  ·  trajectory: MDrun1_whole_pbc.xtc
+════════════════════════════════════════════════════════════════════
+
+
+═══════════════════════2.4.1 Peptide Analysis═════════════════════
+  
+        ───────────────────────────RMSD─────────────────────────────────────
+          gmx rms -s MDrun1.tpr -f MDrun1_whole_pbc.xtc -o TAT_RMSD.xvg -tu ns
+            → least squares fit group:  Backbone
+            → RMSD calculation group:   Backbone
+
+
+        ───────────────────────────RMSF─────────────────────────────────────
+          gmx rmsf -s MDrun1.tpr -f MDrun1_whole_pbc.xtc -o TAT_RMSF.xvg -res
+            → group:  Backbone
+
+
+        ────────────────────────RADIUS OF GYRATION──────────────────────────
+          gmx gyrate -s MDrun1.tpr -f MDrun1_whole_pbc.xtc -o TAT_Rg.xvg
+            → select:  Protein
+
+
+        ──────────────────────SECONDARY STRUCTURE (DSSP)────────────────────
+          gmx dssp -s MDrun1.tpr -f MDrun1_whole_pbc.xtc -sel "Protein" -hmode dssp -o TAT_ss.dat -num TAT_ss_num.xvg -tu ns
+		  
+		  
+		───────────────────────Peptide-PCA BASED FEL────────────────────────
+        ◆ Covariance
+		  gmx covar -s MDrun1.tpr -f MDrun1_whole_pbc.xtc -n index_complex.ndx -o eigenval.xvg -v eigenvec.trr -av average.pdb
+           → least squares fit group: Backbone
+           → covariance group: Backbone
+
+        ◆ PC1 projection
+          gmx anaeig -s MDrun1.tpr -f MDrun1_whole_pbc.xtc -v eigenvec.trr -first 1 -last 1 -proj pc1.xvg -tu ns
+           → fit group (same as covar): Backbone
+           → group of 36 elements matching eigenvectors: Backbone
+		   
+        ◆ PC2 projection
+          gmx anaeig -s MDrun1.tpr -f MDrun1_whole_pbc.xtc -v eigenvec.trr -first 2 -last 2 -proj pc2.xvg -tu ns
+           → fit group (same as covar): Backbone
+           → group of 36 elements matching eigenvectors: Backbone
+
+
+
+
+
+
+═══════════════════════2.4.2 Peptide-Membrane Analysis═════════════════════
+  
+
+────────────TAT-OUTER_LEAFLET DISTANCE ALONG Z (COM Dz)────────────────────
+
+  ◆ TAT center of mass
+    gmx traj -s MDrun1.tpr -f MDrun1_whole_pbc.xtc -n index_complex.ndx -com -ox TAT_COM.xvg -tu ns
+        → select:  Protein
+
+  ◆ Outer leaflet center of mass
+    gmx traj -s MDrun1.tpr -f MDrun1_whole_pbc.xtc -n index_complex.ndx -com -ox Outer_leaflet_COM.xvg
+        → select:  Outer_leaflet
+
+  ◆ Dz (TAT COM minus outer leaflet COM)
+    paste <(grep -v '^[#@]' TAT_COM.xvg) <(grep -v '^[#@]' Outer_leaflet_COM.xvg) | awk 'BEGIN {print "# Time(ns) Dz(nm)"} {if (NF >= 8) {if ($1 != $5) {print "ERROR: time mismatch at " $1 > "/dev/stderr"; exit 1} print $1, $4-$8}}' > TAT_OL_Dz.xvg
+
+
+
+────────────────────────────────────────────────────────────────────
+──────────────────── CV-based FEL───────────────────────────────────
+───────────────For SMD Initial Structure────────────────────────────
+
+  ◆ INDEX GROUP: OUTER LEAFLET WITHOUT H ATOMS (LPSA heavy)
+     gmx make_ndx -f MDrun1.tpr -n index_complex.ndx -o index_contacts.ndx
+        → 27 & ! a H*          (27 = Outer_leaflet; Protein-H = without H)
+        → name 30 LPSA_heavy   (use the number of the new group)
+        → q
+
+──────────────MINIMUM DISTANCE AND CONTACTS─────────────────────────
+    gmx mindist -s MDrun1.tpr -f MDrun1_whole_pbc.xtc -n index_complex.ndx -od TAT-OL_mindist.xvg -on TAT-OL_contacts.xvg -d 0.35 -tu ns
+      → -d is the contact cut-off (nm)
+      → Group 1:  Protein
+      → Group 2:  Outer_leaflet  or  LPSA_heavy (without H)
+
+  ◆ CV-based FEL in Python
+      Two CVs:  TAT_OL_Dz.xvg (COM Dz)  and  TAT-OL_contacts.xvg
+
+
+
+────────────────────────────────────────────────────────────────────
+────────────────────── HYDROGEN BONDS───────────────────────────────
+    gmx hbond -s MDrun1.tpr -f MDrun1_whole_pbc.xtc -n index_complex.ndx -cutoff 0.35 -hbr 0.35 -hba 30 -num hbnum.xvg -dist hbdist.xvg -ang hbang.xvg -tu ns
+      → Group:  Protein
+      → Group:  Outer_leaflet
+
+    gmx hbond -s MDrun1.tpr -f MDrun1_whole_pbc.xtc -n index_complex.ndx -cutoff 0.35 -hbr 0.35 -hba 30 -num ECLIP_Hbond_num.xvg -dist ECLIP_Hbond_dist.xvg -ang ECLIP_Hbond_ang.xvg -tu n
+        
