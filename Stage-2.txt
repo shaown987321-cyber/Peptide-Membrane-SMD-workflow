@@ -189,7 +189,6 @@ MEMBL (all membrane componets + protein)
 
 ──────────────MINIMUM DISTANCE AND CONTACTS─────────────────────────
     gmx mindist -s MDrun1.tpr -f MDrun1_whole_pbc.xtc -n index_complex.ndx -od TAT-OL_mindist.xvg -on TAT-OL_contacts.xvg -d 0.35 -tu ns
-      → -d is the contact cut-off (nm)
       → Group 1:  Protein
       → Group 2:  Outer_leaflet  or  LPSA_heavy (without H)
 
