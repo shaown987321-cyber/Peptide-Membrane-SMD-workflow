@@ -1,0 +1,58 @@
+TAT PEPTIDE-MEMBRANE SYSTEM  ·  SMD STRUCTURE PREPARATION AND RUN
+Stage 4  ·  from MDrun2 to SMD
+════════════════════════════════════════════════════════════════════
+
+
+OVERVIEW
+────────────────────────────────────────────────────────────────────
+  4.1   Prepare the SMD structure (make whole, center)
+  4.2   Extract the last frame for SMD
+  4.3   SMD run
+  4.4   SMD Analysis
+
+
+
+════════════════════════════════════════════════════════════════════
+4.1  PREPARE SMD STRUCTURE  ·  PBC whole and centering
+════════════════════════════════════════════════════════════════════
+  ◆ Step-a: Make molecules whole
+     gmx trjconv -s MDrun2.tpr -f MDrun2.xtc -n index_complex.ndx -o MDrun2_whole.xtc -pbc whole
+        → select:  System
+
+  ◆ Step-b: Center the system
+     gmx trjconv -s MDrun2.tpr -f MDrun2_whole.xtc -n index_complex.ndx -o MDrun2_centered.xtc -center -pbc mol -ur compact
+        → centering group: DMPE
+        → output group: System
+
+
+════════════════════════════════════════════════════════════════════
+4.2  EXTRACT LAST FRAME FOR SMD
+════════════════════════════════════════════════════════════════════
+    gmx trjconv -s MDrun2.tpr -n index_complex.ndx -f MDrun2_centered.xtc -o SMD_ini.gro -dump 5000
+        → select:  System
+
+          NOTE: -dump is in ps, so 5000 ps = 5 ns. This is the last frame only
+          for a 5 ns MDrun2. For a 10 ns run use -dump 10000.
+
+
+════════════════════════════════════════════════════════════════════
+4.3  SMD RUN
+════════════════════════════════════════════════════════════════════
+    gmx grompp -f smd.mdp -c SMD_ini.gro -p topol.top -n index_complex.ndx -o SMD.tpr
+    gmx mdrun -deffnm SMD -v
+
+  NOTE: SMD_ini.gro has no velocities, so smd.mdp needs gen_vel = yes
+  and continuation = no. If smd.mdp uses position restraints, also
+  add -r SMD_ini.gro to grompp. The pull output files (SMD_pullx.xvg
+  and SMD_pullf.xvg) are written automatically when pull-coord output
+  is enabled in smd.mdp.
+
+
+════════════════════════════════════════════════════════════════════
+4.4  SMD RERUN  ·  resume from checkpoint
+════════════════════════════════════════════════════════════════════
+
+    gmx mdrun -deffnm SMD -cpi SMD.cpt -px SMD_pullx.xvg -pf SMD_pullf.xvg -append -v
+
+  NOTE: keep the -px / -pf names the same as in the first run so the
+  new pull data is appended to the same files.
