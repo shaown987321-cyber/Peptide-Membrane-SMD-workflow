@@ -24,4 +24,4 @@ REQUIRED TOOLS
   c)  CHARMM-GUI server
   d)  GROMACS
   e)  PyMOL or VMD  ·  visual inspection of structures and trajectories
-  f)  Python  ·  plotting .xvg / .xpm outputs and building the FEL
+  f)  Python  ·  plotting .xvg / .xpm outputs 
