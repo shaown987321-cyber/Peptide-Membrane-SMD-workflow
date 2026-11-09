@@ -1,0 +1,36 @@
+TAT PEPTIDE-MEMBRANE SYSTEM  ·  PRE-MD FOR SMD STRUCTURE
+Stage 3  ·  MDrun2 (5 or 10 ns)
+════════════════════════════════════════════════════════════════════
+
+
+OVERVIEW
+────────────────────────────────────────────────────────────────────
+  3.1   Extract the starting structure (from FEL analysis)
+  3.2   Short MD run (MDrun2) to prepare the SMD initial structure
+
+
+
+════════════════════════════════════════════════════════════════════
+3.1  EXTRACT STRUCTURE FOR MDrun2  ·  from FEL analysis
+════════════════════════════════════════════════════════════════════
+
+    gmx trjconv -s MDrun1.tpr -f MDrun1.xtc -n index_complex.ndx -o MDrun2.gro -dump 490250
+        → select group for output:  System
+
+  NOTE: -dump takes time in ps, so 490250 ps = 490.25 ns. Use the
+  original MDrun1.xtc (not the centered file) so the box and PBC
+  stay consistent with the topology. The frame closest to that time
+  is written, so check that MDrun1.xtc has a frame near it.
+
+
+
+════════════════════════════════════════════════════════════════════
+3.2  SHORT MD RUN FOR SMD  ·  5 or 10 ns
+════════════════════════════════════════════════════════════════════
+
+    gmx grompp -f MDrun2.mdp -c MDrun2.gro -r MDrun2.gro -p topol.top -n index_complex.ndx -o MDrun2.tpr
+    gmx mdrun -deffnm MDrun2 -v
+
+  NOTE: the .gro file has no velocities, so set gen_vel = yes and
+  continuation = no in MDrun2.mdp. The -r file is only used if the
+  mdp has position restraints (define = -DPOSRES ...).
