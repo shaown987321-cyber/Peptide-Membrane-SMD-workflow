@@ -49,6 +49,7 @@ STAGE 1  ·  PEPTIDE BUILD, MD SIMULATION AND ANALYSIS
      gmx grompp -f nvt.mdp -c em.gro -r em.gro -p topol.top -o nvt.tpr
      gmx mdrun -deffnm nvt -v
      gmx energy -f nvt.edr -o temperature.xvg
+     gmx energy -f nvt.edr -o volume.xvg
 
 
   ◆ NPT equilibration
