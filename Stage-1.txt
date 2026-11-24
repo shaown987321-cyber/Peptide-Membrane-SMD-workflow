@@ -64,6 +64,12 @@ STAGE 1  ·  PEPTIDE BUILD, MD SIMULATION AND ANALYSIS
      gmx mdrun -deffnm MDrun1 -v
 
 
+gmx energy -f MDrun1.edr -o MDrun1_density.xvg
+gmx energy -f MDrun1.edr -o MDrun1_temperature.xvg
+gmx energy -f MDrun1.edr -o MDrun1_potential.xvg
+gmx energy -f MDrun1.edr -o MDrun1_volume.xvg
+gmx energy -f MDrun1.edr -o MDrun1_pressure.xvg
+
 ───────────────────────────────────────────────────────────────────
 ───────────────────────Re-run──────────────────────────────────────
 
