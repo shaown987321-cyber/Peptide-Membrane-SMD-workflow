@@ -200,8 +200,10 @@ gmx energy -f MDrun1.edr -o MDrun1_pressure.xvg
 ───────────────────────────────────────────────────────────────────
 ────────────────────Clustering─────────────────────────────────────    
 
-  gmx cluster -s MDrun1.tpr -f MDrun1_whole_pbc.xtc -n index.ndx -method gromos -cutoff 0.15 -o clusters.xpm -g cluster.log -cl cluster_centers.pdb -sz cluster_size.xvg -dist cluster_rmsd.xvg -tu ns
-   → Least squares fit: Backbone
-   → RMSD calculation: Backbone
-   
+ gmx cluster -s MDrun1.tpr -f MDrun1_whole_pbc.xtc -method gromos -b 30 -cutoff 0.20 -o clusters.xpm -g cluster.log -cl cluster_centers.pdb -sz cluster_size.xvg -dist cluster_rmsd.xvg -tu ns
+   → Least squares fit and RMSD calculation: Backbone
+   → outout: Protein
+ 
+ gmx_mpi trjconv -s MDrun1.tpr -f MDrun1_whole_pbc.xtc -o frame_48.2ns.pdb -dump 48200 
+
 ───────────────────────────────────────────────────────────────────
