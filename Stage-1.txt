@@ -152,6 +152,11 @@ STAGE 1  ·  PEPTIDE BUILD, MD SIMULATION AND ANALYSIS
      gmx gyrate -s MDrun1.tpr -f MDrun1_whole_pbc.xtc -o TAT_Rg.xvg
        → select: Protein
 
+  ◆ SASA
+      gmx sasa -s MDrun1.tpr -f MDrun1_whole_pbc.xtc -o SASA_total.xvg -or SASA_res.xvg
+       → select: Protein 
+
+
   ◆ Hydrogen bonds
      gmx hbond -s MDrun1.tpr -f MDrun1_whole_pbc.xtc -n index.ndx -cutoff 0.35 -hbr 0.35 -hba 30 -num hbnum.xvg -dist hbdist.xvg -ang hbang.xvg -tu ns
        → run twice: Protein - Protein  (intra-peptide)
