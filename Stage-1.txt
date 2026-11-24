@@ -146,20 +146,20 @@ gmx energy -f MDrun1.edr -o MDrun1_pressure.xvg
      gmx make_ndx -f MDrun1.tpr -o index.ndx
 
   ◆ RMSD
-     gmx rms -s MDrun1.tpr -f MDrun1_whole_pbc.xtc -n index.ndx -o TAT_RMSD.xvg -tu ns
+     gmx rms -s MDrun1.tpr -f MDrun1_whole_pbc.xtc -o RMSD.xvg -tu ns
        → least squares fit group: Backbone
        → RMSD calculation group: Backbone
 
   ◆ RMSF
-     gmx rmsf -s MDrun1.tpr -f MDrun1_whole_pbc.xtc -o TAT_RMSF.xvg -res
+     gmx rmsf -s MDrun1.tpr -f MDrun1_whole_pbc.xtc -o RMSF.xvg -res
        → group: Backbone
 
   ◆ Radius of gyration
-     gmx gyrate -s MDrun1.tpr -f MDrun1_whole_pbc.xtc -o TAT_Rg.xvg
+     gmx gyrate -s MDrun1.tpr -f MDrun1_whole_pbc.xtc -o RG.xvg
        → select: Protein
 
   ◆ SASA
-      gmx sasa -s MDrun1.tpr -f MDrun1_whole_pbc.xtc -o SASA_total.xvg -or SASA_res.xvg
+      gmx sasa -s MDrun1.tpr -f MDrun1_whole_pbc.xtc -o SASA.xvg -or SASA_res.xvg
        → select: Protein 
 
 
