@@ -54,6 +54,10 @@ MEMBL (all membrane componets + protein)
     gmx mdrun -deffnm step6_0 -v
     gmx energy -f step6_0.edr -o step6-0_potential.xvg
 
+Convergence ও Fmax 
+    tail -n 20 step6_0.log
+    converged to Fmax < 1000" লেখা থাকলে minimization সফল।
+
   ◆ Step-6.1: Equilibration (NVT)
     gmx grompp -f step6.1_equilibration.mdp -c step6_0.gro -r step6_0.gro -p topol.top -n index.ndx -o step6_1.tpr
     gmx mdrun -deffnm step6_1 -v
