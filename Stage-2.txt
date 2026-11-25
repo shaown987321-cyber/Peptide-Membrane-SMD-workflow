@@ -55,46 +55,46 @@ MEMBL (all membrane componets + protein)
     gmx energy -f step6_0.edr -o step6-0_potential.xvg
 
   ◆ Step-6.1: Equilibration (NVT)
-    gmx grompp -f step6.1_equilibration.mdp -c step6_0.gro -r step6_0.gro -p topol.top -n index_complex.ndx -o step6_1.tpr
+    gmx grompp -f step6.1_equilibration.mdp -c step6_0.gro -r step6_0.gro -p topol.top -n index.ndx -o step6_1.tpr
     gmx mdrun -deffnm step6_1 -v
     gmx energy -f step6_1.edr -o step6-1_temperature.xvg
     gmx energy -f step6_1.edr -o step6-1_potential.xvg
     gmx energy -f step6_1.edr -o step6-1_volume.xvg
 
   ◆ Step-6.2: Equilibration (NVT)
-    gmx grompp -f step6.2_equilibration.mdp -c step6_1.gro -r step6_1.gro -t step6_1.cpt -p topol.top -n index_complex.ndx -o step6_2.tpr
+    gmx grompp -f step6.2_equilibration.mdp -c step6_1.gro -r step6_1.gro -t step6_1.cpt -p topol.top -n index.ndx -o step6_2.tpr
     gmx mdrun -deffnm step6_2 -v
     gmx energy -f step6_2.edr -o step6-2_temperature.xvg
     gmx energy -f step6_2.edr -o step6-2_potential.xvg
     gmx energy -f step6_2.edr -o step6-2_volume.xvg
 
   ◆ Step-6.3: Equilibration (NPT)
-    gmx grompp -f step6.3_equilibration.mdp -c step6_2.gro -r step6_2.gro -t step6_2.cpt -p topol.top -n index_complex.ndx -o step6_3.tpr
+    gmx grompp -f step6.3_equilibration.mdp -c step6_2.gro -r step6_2.gro -t step6_2.cpt -p topol.top -n index.ndx -o step6_3.tpr
     gmx mdrun -deffnm step6_3 -v
     gmx energy -f step6_3.edr -o step6-3_pressure.xvg
     gmx energy -f step6_3.edr -o step6-3_density.xvg
     gmx energy -f step6_0.edr -o step6-3_potential.xvg
 
   ◆ Step 6.4  ·  Equilibration (NPT)
-    gmx grompp -f step6.4_equilibration.mdp -c step6_3.gro -r step6_3.gro -t step6_3.cpt -p topol.top -n index_complex.ndx -o step6_4.tpr
+    gmx grompp -f step6.4_equilibration.mdp -c step6_3.gro -r step6_3.gro -t step6_3.cpt -p topol.top -n index.ndx -o step6_4.tpr
     gmx mdrun -deffnm step6_4 -v
     gmx energy -f step6_4.edr -o step6-4_pressure.xvg
     gmx energy -f step6_4.edr -o step6-4_density.xvg
 
   ◆ Step 6.5  ·  Equilibration (NPT)
-    gmx grompp -f step6.5_equilibration.mdp -c step6_4.gro -r step6_4.gro -t step6_4.cpt -p topol.top -n index_complex.ndx -o step6_5.tpr
+    gmx grompp -f step6.5_equilibration.mdp -c step6_4.gro -r step6_4.gro -t step6_4.cpt -p topol.top -n index.ndx -o step6_5.tpr
     gmx mdrun -deffnm step6_5 -v
     gmx energy -f step6_5.edr -o step6-5_pressure.xvg
     gmx energy -f step6_5.edr -o step6-5_density.xvg
    
   ◆ Step 6.6  ·  Equilibration (NPT)
-    gmx grompp -f step6.6_equilibration.mdp -c step6_5.gro -r step6_5.gro -t step6_5.cpt -p topol.top -n index_complex.ndx -o step6_6.tpr
+    gmx grompp -f step6.6_equilibration.mdp -c step6_5.gro -r step6_5.gro -t step6_5.cpt -p topol.top -n index.ndx -o step6_6.tpr
     gmx mdrun -deffnm step6_6 -v
     gmx energy -f step6_6.edr -o step6-6_pressure.xvg
     gmx energy -f step6_6.edr -o step6-6_density.xvg
 
   ◆ Step 7  ·  Production run
-    gmx grompp -f step7_production.mdp -c step6_6.gro -r step6_6.gro -t step6_6.cpt -p topol.top -n index_complex.ndx -o MDrun1.tpr
+    gmx grompp -f step7_production.mdp -c step6_6.gro -r step6_6.gro -t step6_6.cpt -p topol.top -n index.ndx -o MDrun1.tpr
     gmx mdrun -deffnm MDrun1 -v
 
    gmx energy -f MDrun1.edr -o MDrun1_density.xvg
