@@ -58,12 +58,14 @@ MEMBL (all membrane componets + protein)
     gmx grompp -f step6.1_equilibration.mdp -c step6_0.gro -r step6_0.gro -p topol.top -n index_complex.ndx -o step6_1.tpr
     gmx mdrun -deffnm step6_1 -v
     gmx energy -f step6_1.edr -o step6-1_temperature.xvg
+    gmx energy -f step6_1.edr -o step6-1_potential.xvg
     gmx energy -f step6_1.edr -o step6-1_volume.xvg
 
   ◆ Step-6.2: Equilibration (NVT)
     gmx grompp -f step6.2_equilibration.mdp -c step6_1.gro -r step6_1.gro -t step6_1.cpt -p topol.top -n index_complex.ndx -o step6_2.tpr
     gmx mdrun -deffnm step6_2 -v
     gmx energy -f step6_2.edr -o step6-2_temperature.xvg
+    gmx energy -f step6_2.edr -o step6-2_potential.xvg
     gmx energy -f step6_2.edr -o step6-2_volume.xvg
 
   ◆ Step-6.3: Equilibration (NPT)
@@ -71,6 +73,7 @@ MEMBL (all membrane componets + protein)
     gmx mdrun -deffnm step6_3 -v
     gmx energy -f step6_3.edr -o step6-3_pressure.xvg
     gmx energy -f step6_3.edr -o step6-3_density.xvg
+    gmx energy -f step6_0.edr -o step6-3_potential.xvg
 
   ◆ Step 6.4  ·  Equilibration (NPT)
     gmx grompp -f step6.4_equilibration.mdp -c step6_3.gro -r step6_3.gro -t step6_3.cpt -p topol.top -n index_complex.ndx -o step6_4.tpr
